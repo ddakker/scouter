@@ -30,6 +30,7 @@ public class ObjTypeDetector {
 	public static Set<String> extClass = new HashSet<String>();
 	static {
 		bootClass.put("org/eclipse/jetty/server/Server", CounterConstants.JETTY);
+		bootClass.put("org/jboss/as/server/Bootstrap", "jboss"); // jboss eap 6.3.x / 6.4.x
 		bootClass.put("org/jboss/Main", CounterConstants.JBOSS); // jboss as 6.1.0
 		bootClass.put("org/jboss/as/server/Main", CounterConstants.JBOSS); // jboss as 7.2.0 final
 		bootClass.put("org/apache/catalina/startup/Bootstrap", CounterConstants.TOMCAT);
