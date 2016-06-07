@@ -616,7 +616,22 @@ public class XLogViewPainter {
 			return true;
 		}
 		String serviceName = TextProxy.service.getLoadText(yyyymmdd, d.p.service, d.serverId);
-		return serviceMat.include(serviceName);
+		
+		if (filterStatus.service.contains(",")) {
+			String serviceArr [] = filterStatus.service.split(",");
+			boolean isMat = false;
+			for (String svc : serviceArr) {
+				System.out.println("svc: " + svc);
+				StrMatch svcMat = new StrMatch(serviceName);
+				if (svcMat.include(svc) == true) {
+					isMat = true;
+					break;
+				}
+			}
+			return isMat;
+		} else {
+			return serviceMat.include(serviceName);
+		}
 	}
 	
 	public boolean isIpFilterOk(XLogPack p) {
