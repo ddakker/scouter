@@ -621,7 +621,6 @@ public class XLogViewPainter {
 			String serviceArr [] = filterStatus.service.split(",");
 			boolean isMat = false;
 			for (String svc : serviceArr) {
-				System.out.println("svc: " + svc);
 				StrMatch svcMat = new StrMatch(serviceName);
 				if (svcMat.include(svc) == true) {
 					isMat = true;
