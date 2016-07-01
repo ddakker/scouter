@@ -5,6 +5,50 @@
 
 
 
+        //System.out.println("22 :alert.plug process $pack: " + $pack.toString());
+        //System.out.println("$pack.objHash: " + scouter.server.core.AgentManager.getAgentName($pack.objHash));
+        //System.out.println(scouter.util.Hexa32.toString32($pack.objHash));
+        scouter.server.Configure conf = scouter.server.Configure.getInstance();
+
+        if ($pack.level > 1) {
+                com.rabbitmq.client.ConnectionFactory factory = null;
+                com.rabbitmq.client.Connection connection = null;
+                com.rabbitmq.client.Channel channel = null;
+                String QUEUE_NAME = "alert";
+                try {
+                        factory = new com.rabbitmq.client.ConnectionFactory();
+                        factory.setHost(conf.getValue("mq_ip"));
+                        factory.setPort(conf.getInt("mq_port", 5672));
+                        factory.setUsername(conf.getValue("mq_id"));
+                        factory.setPassword(conf.getValue("mq_pwd"));
+                        factory.setVirtualHost(conf.getValue("mq_vh"));
+
+                        connection = factory.newConnection();
+                        channel = connection.createChannel();
+
+                        java.util.HashMap data = new java.util.HashMap();
+                        data.put("objType", $pack.objType);
+                        data.put("objHash", $pack.objHash + "");
+                        data.put("objName", scouter.server.core.AgentManager.getAgentName($pack.objHash));
+                        data.put("level", $pack.level + "");
+                        data.put("title", $pack.title);
+                        data.put("message", $pack.message);
+
+                        channel.basicPublish("", "alert", null, org.apache.commons.lang.SerializationUtils.serialize(data));
+
+                } catch (Exception e) {
+                        System.err.println(e);
+                } finally {
+                        if (channel != null) {
+                                try { channel.close(); } catch (Exception e) {}
+                        }
+                        if (connection != null) {
+                                try { connection.close(); } catch (Exception e) {}
+                        }
+                }
+
+        }
+
 
 
 // }
